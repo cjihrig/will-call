@@ -1,0 +1,33 @@
+{
+  "name": "will-call",
+  "version": "1.0.0",
+  "description": "check that expected function calls are actually made",
+  "author": "Continuation Labs <contact@continuation.io> (http://continuation.io/)",
+  "main": "lib/index.js",
+  "homepage": "https://github.com/continuationlabs/will-call",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/continuationlabs/will-call"
+  },
+  "bugs": {
+    "url": "https://github.com/continuationlabs/will-call/issues"
+  },
+  "license": "MIT",
+  "scripts": {
+    "lint": "belly-button -f",
+    "test": "npm run lint && lab -v -a code -c"
+  },
+  "devDependencies": {
+    "belly-button": "2.0.1",
+    "code": "2.1.1",
+    "lab": "10.3.0"
+  },
+  "keywords": [
+    "call",
+    "must call",
+    "will call",
+    "should call",
+    "assert",
+    "expect"
+  ]
+}
