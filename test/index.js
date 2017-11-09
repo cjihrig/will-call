@@ -6,14 +6,13 @@ const WillCall = require('../');
 
 // Test shortcuts
 const lab = exports.lab = Lab.script();
+const { describe, it } = lab;
 const expect = Code.expect;
-const describe = lab.describe;
-const it = lab.it;
 
 
 describe('Will Call', () => {
   describe('WillCall.prototype.expect()', () => {
-    it('stores contexts of functions passed in', (done) => {
+    it('stores contexts of functions passed in', () => {
       const wc = new WillCall();
       let item;
 
@@ -37,11 +36,9 @@ describe('Will Call', () => {
       expect(item.actual).to.equal(0);
       expect(item.stack).to.be.a.string();
       expect(item.name).to.equal('bar');
-
-      done();
     });
 
-    it('invoking wrapped function increments actual count', (done) => {
+    it('invoking wrapped function increments actual count', () => {
       const wc = new WillCall();
       const foo = wc.expect(function foo () { return 'bar'; });
       const item = wc._checks[wc._checks.length - 1];
@@ -49,10 +46,9 @@ describe('Will Call', () => {
       expect(item.actual).to.equal(0);
       expect(foo()).to.equal('bar');
       expect(item.actual).to.equal(1);
-      done();
     });
 
-    it('sets expected to 1 if an invalid value is passed', (done) => {
+    it('sets expected to 1 if an invalid value is passed', () => {
       function test (value) {
         const wc = new WillCall();
         wc.expect(function foo () { return 'bar'; }, value);
@@ -72,10 +68,9 @@ describe('Will Call', () => {
       test(/foo/);
       test([]);
       test({});
-      done();
     });
 
-    it('throws if fn is not a function', (done) => {
+    it('throws if fn is not a function', () => {
       function fail (fn) {
         const wc = new WillCall();
 
@@ -95,12 +90,11 @@ describe('Will Call', () => {
       fail(/foo/);
       fail([]);
       fail({});
-      done();
     });
   });
 
   describe('WillCall.prototype.check()', () => {
-    it('reports functions that were not called appropriately', (done) => {
+    it('reports functions that were not called appropriately', () => {
       const wc = new WillCall();
       const foo = wc.expect(function foo () { return 'foo'; });
       const bar = wc.expect(function bar () { return 'bar'; }, 2);
@@ -123,7 +117,51 @@ describe('Will Call', () => {
       expect(results[1].expected).to.equal(1);
       expect(results[1].actual).to.equal(2);
       expect(results[1].stack).to.be.a.string();
-      done();
     });
+  });
+
+  it('works with async functions', async () => {
+    let sleepCount = 0;
+
+    function sleep (ms) {
+      return new Promise((resolve) => {
+        setTimeout(() => {
+          sleepCount++;
+          resolve();
+        }, ms);
+      });
+    }
+
+    const wc = new WillCall();
+    const foo = wc.expect(async function foo () {
+      await sleep(1500);
+      return 'foo';
+    });
+    const bar = wc.expect(async function bar () {
+      await sleep(1000);
+      return 'bar';
+    }, 2);
+    const baz = wc.expect(async function baz () { // eslint-disable-line require-await
+      return sleep(1000);
+    });
+
+    await foo();
+    await bar();
+    await baz();
+    await baz();
+    expect(sleepCount).to.equal(4);
+
+    const results = wc.check();
+
+    expect(results).to.be.an.array();
+    expect(results.length).to.equal(2);
+    expect(results[0].name).to.equal('bar');
+    expect(results[0].expected).to.equal(2);
+    expect(results[0].actual).to.equal(1);
+    expect(results[0].stack).to.be.a.string();
+    expect(results[1].name).to.equal('baz');
+    expect(results[1].expected).to.equal(1);
+    expect(results[1].actual).to.equal(2);
+    expect(results[1].stack).to.be.a.string();
   });
 });
