@@ -1,6 +1,6 @@
 {
   "name": "will-call",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "check that expected function calls are actually made",
   "author": "Continuation Labs <contact@continuation.io> (http://continuation.io/)",
   "main": "lib/index.js",
