@@ -3,8 +3,8 @@
 [![Current Version](https://img.shields.io/npm/v/will-call.svg)](https://www.npmjs.org/package/will-call)
 [![Build Status via Travis CI](https://travis-ci.org/continuationlabs/will-call.svg?branch=master)](https://travis-ci.org/continuationlabs/will-call)
 ![Dependencies](http://img.shields.io/david/continuationlabs/will-call.svg)
+[![belly-button-style](https://img.shields.io/badge/eslint-bellybutton-4B32C3.svg)](https://github.com/continuationlabs/belly-button)
 
-[![belly-button-style](https://cdn.rawgit.com/continuationlabs/belly-button/master/badge.svg)](https://github.com/continuationlabs/belly-button)
 
 **Credit:** This module borrows heavily from the `common.mustCall()` functionality in Node core's test suite.
 
